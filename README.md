@@ -54,6 +54,8 @@ Per visualizzare la **Dashboard** andare all'indirizzo:
 
 http://localhost:8501
 
+![webapp](img/screen.png)
+
 ### HTTP POST di Prova
 
 per testare se la configurazione è funzionante, aprire un nuovo terminale ed eseguire:
