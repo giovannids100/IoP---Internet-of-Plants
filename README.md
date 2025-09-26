@@ -2,6 +2,8 @@
 
 ### Progetto per Architettura e Progetto dei Calcolatori
 
+![plant-gif](https://media.tenor.com/FBl0YGy2mDUAAAAj/plant-dance.gif)
+
 ## Panoramica
 
 Il progetto consiste nel monitoraggio di varie metriche fondamentali alla salute di una o più **piante** (es. **Umidità del Suolo**) Tramite l'utilizzo di dispositivi **IOT** e Interfaccia Utente tramite **Web Dashboard**.
