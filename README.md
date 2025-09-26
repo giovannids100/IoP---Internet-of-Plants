@@ -8,12 +8,12 @@ Il progetto consiste nel monitoraggio di varie metriche fondamentali alla salute
 
 ### Strumentazione
 
-**STM32F3 Discovery** Board principale
-**ESP32** Network
-**Sensori** per le misurazioni
-**STM32 CUBE IDE** Per la programmazione delle board
-**FastAPI** per la ricezione dei dati
-**Streamlit** per la visualizzazione della Dashboard
+- **STM32F3 Discovery** Board principale
+- **ESP32** Network
+- **Sensori** per le misurazioni
+- **STM32 CUBE IDE** Per la programmazione delle board
+- **FastAPI** per la ricezione dei dati
+- **Streamlit** per la visualizzazione della Dashboard
 
 ### Architettura
 
