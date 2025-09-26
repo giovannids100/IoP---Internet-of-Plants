@@ -1,6 +1,6 @@
 # IoP - Internet of Plants 🪴
 
-## Progetto per Architettura e Progetto di Calcolatori
+### Progetto per Architettura e Progetto dei Calcolatori
 
 ## Panoramica
 
@@ -49,6 +49,10 @@ python run.py
 Adesso vi saranno 2 **servizi** attivi:
 - **Streamlit** sulla porta **8501**
 - **API** sulla porta **8000**
+
+Per visualizzare la **Dashboard** andare all'indirizzo:
+
+http://localhost:8501
 
 ### HTTP POST di Prova
 
