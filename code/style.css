@@ -1,0 +1,80 @@
+body{
+    background: #FFF;
+  }
+  
+  .box{
+    position: relative;
+    margin: auto;
+    display: block;
+    margin-top: 6%;
+    background: none;
+  }
+  
+  .container {
+    border-radius: 50%;
+    position: absolute;
+    top:16.5%;
+    left: 25%;
+    width: 800px;
+    height: 800px;
+    background: linear-gradient(180deg, rgba(169,202,213,1) 0%, rgba(255,255,255,1) 100%);;
+    z-index: 5;
+  }
+  
+  .stem {
+    top: 16.5%;
+    left: 50%;
+    width: 26px;
+    height: 670px;
+    background: linear-gradient(36deg, rgba(76,66,54,1) 0%, rgba(186,167,141,1) 100%);
+    position: absolute;
+    border-radius: 60% 60% 0 0;
+  }
+  
+  .leaf-1 {
+    position: absolute;
+    left: 38.5%;
+    top: 19%;
+    background-image: linear-gradient(130deg, #63D471 30%, #233329 74%);
+    border-top-left-radius: 124px;
+    border-bottom-right-radius: 116px;
+    height: 78px;
+    transform: rotate(80deg);
+    width: 95px;
+  }
+  
+  .leaf-2 {
+    position: absolute;
+    left: 55%;
+    top: 31%;
+    background-image: linear-gradient(340deg, #63D471 2%, #233329 78%);
+    border-top-left-radius: 124px;
+    border-bottom-right-radius: 116px;
+    height: 128px;
+    transform: rotate(192deg);
+    width: 141px;
+  }
+  
+  .leaf-3 {
+    position: absolute;
+    left: 28%;
+    top: 46%;
+    background-image: linear-gradient(113deg, #63D471 0%, #233329 64%);
+    border-top-left-radius: 134px;
+    border-bottom-right-radius: 126px;
+    height: 150px;
+    transform: rotate(73deg);
+    width: 162px;
+  }
+  
+  .leaf-4 {
+   position: absolute;
+    left: 55.5%;
+    top: 62%;
+    background-image: linear-gradient(340deg, #63D471 2%, #233329 78%);
+    border-top-left-radius: 124px;
+    border-bottom-right-radius: 116px;
+    height: 160px;
+    transform: rotate(195deg);
+    width: 190px;
+  }
