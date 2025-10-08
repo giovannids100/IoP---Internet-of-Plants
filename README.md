@@ -58,6 +58,16 @@ http://localhost:8501
 
 ![webapp](img/screen.png)
 
+## DEPLOY DOCKER
+
+nella cartella della repo:
+
+```bash
+docker build -t iop .
+docker run -p 80:8501 -p 8000:8000 iop
+```
+Stavolta la web app sarà sulla porta 80
+
 ### HTTP POST di Prova
 
 per testare se la configurazione è funzionante, aprire un nuovo terminale ed eseguire:
