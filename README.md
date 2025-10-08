@@ -2,18 +2,20 @@
 
 ### Progetto per Architettura e Progetto dei Calcolatori
 
+![plant-gif](https://media.tenor.com/FBl0YGy2mDUAAAAj/plant-dance.gif)
+
 ## Panoramica
 
 Il progetto consiste nel monitoraggio di varie metriche fondamentali alla salute di una o più **piante** (es. **Umidità del Suolo**) Tramite l'utilizzo di dispositivi **IOT** e Interfaccia Utente tramite **Web Dashboard**.
 
 ### Strumentazione
 
-**STM32F3 Discovery** Board principale
-**ESP32** Network
-**Sensori** per le misurazioni
-**STM32 CUBE IDE** Per la programmazione delle board
-**FastAPI** per la ricezione dei dati
-**Streamlit** per la visualizzazione della Dashboard
+- **STM32F3 Discovery** Board principale
+- **ESP32** Network
+- **Sensori** per le misurazioni
+- **STM32 CUBE IDE** Per la programmazione delle board
+- **FastAPI** per la ricezione dei dati
+- **Streamlit** per la visualizzazione della Dashboard
 
 ### Architettura
 
@@ -22,9 +24,9 @@ Il progetto consiste nel monitoraggio di varie metriche fondamentali alla salute
 - Uno o più **sensori** effettuano misurazioni continue e inviano i segnali alla **board** che li riceve tramite **A/DC**.
 - La board utilizza la **USART** per inviare i segnali elaborati all' **ESP32**.
 - Quest'ultimo invia una **HTTP POST** all' **API REST** (api/dati per ricevere) dell'applicazione, che può in questo modo mostrare i dati sulla **Dashboard** (api/value per visualizzare l'ultimo valore ricevuto).
-- [OPTIONAL] Utilizzo di un **Database** per giacenza e visualizzazione dei dati in ordine cronologico.
-- [OPTIONAL] Utilizzo di un **Bot Telegram** per le notifiche di alert (es. livello critico di Umidità/Temperatura).
-- [OPTIONAL MA NON COSÌ OPTIONAL] Deploy tramite **Docker** e scrittura di un **Docker Compose**.
+- **[OPTIONAL]** Utilizzo di un **Database** per giacenza e visualizzazione dei dati in ordine cronologico.
+- **[OPTIONAL]** Utilizzo di un **Bot Telegram** per le notifiche di alert (es. livello critico di Umidità/Temperatura).
+- **[OPTIONAL MA NON COSÌ OPTIONAL]** Deploy tramite **Docker** e scrittura di un **Docker Compose**.
 
 
 ## QUICKSTART
