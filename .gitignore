@@ -1,5 +1,5 @@
 #env file
-code/env.h
+code/esp32/env.h
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
