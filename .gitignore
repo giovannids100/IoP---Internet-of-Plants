@@ -1,5 +1,12 @@
 #env file
 code/esp32/env.h
+code/esp32/Esp32Driver/env.h
+
+#metadata
+code/stm32f3_project/.metadata
+
+#backup
+code/stm32f3_project (Backup)
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

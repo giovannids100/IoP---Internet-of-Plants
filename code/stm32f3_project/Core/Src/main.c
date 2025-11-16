@@ -2,7 +2,7 @@
 /*
   ******************************************************************************
   * @file           : main.c
-  * @brief          : Main program body
+  * @brief          : Main program body (Timer + Interrupt version)
   ******************************************************************************
   * @attention
   *
@@ -43,10 +43,13 @@
 ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
+TIM_HandleTypeDef htim6;
+
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-
+volatile uint32_t value_adc = 0;
+volatile uint8_t adc_conversion_complete = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -55,6 +58,7 @@ static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_ADC1_Init(void);
+static void MX_TIM6_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -96,13 +100,16 @@ int main(void)
   MX_DMA_Init();
   MX_USART1_UART_Init();
   MX_ADC1_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
 
-  uint32_t value_adc;
   uint8_t humidity_percent;
 
-
+  // Calibrazione ADC
   HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
+
+  // Avvia il timer TIM6 con interrupt ogni 10 secondi
+  HAL_TIM_Base_Start_IT(&htim6);
 
   /* USER CODE END 2 */
 
@@ -114,21 +121,20 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  // Nel loop principale dello STM32
-	  HAL_ADC_Start_DMA(&hadc1,(uint32_t*)&value_adc,1);
-	  HAL_Delay(10);
-	  HAL_ADC_Stop_DMA(&hadc1);
+    // Attendi che la conversione ADC sia completa (flag impostato nell'interrupt)
+    if (adc_conversion_complete == 1) {
+      adc_conversion_complete = 0;
 
-	  // Converti ADC in percentuale (invertita: 4095=secco=0%, 0=bagnato=100%)
-	  if (value_adc >= 4095) {
-	      humidity_percent = 0;  // Completamente secco
-	  } else {
-	      humidity_percent = (uint8_t)(100 - ((value_adc * 100) / 4095));
-	  }
+      // Converti ADC in percentuale (invertita: 4095=secco=0%, 0=bagnato=100%)
+      if (value_adc >= 4095) {
+        humidity_percent = 0;  // Completamente secco
+      } else {
+        humidity_percent = (uint8_t)(100 - ((value_adc * 100) / 4095));
+      }
 
-	  // Invia il valore in percentuale
-	  HAL_UART_Transmit(&huart1, &humidity_percent, 1, HAL_MAX_DELAY);
-	  HAL_Delay(5000);
+      // Invia il valore in percentuale via UART
+      HAL_UART_Transmit(&huart1, &humidity_percent, 1, HAL_MAX_DELAY);
+    }
 
   }
   /* USER CODE END 3 */
@@ -152,7 +158,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL2;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL4;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -247,6 +253,44 @@ static void MX_ADC1_Init(void)
 }
 
 /**
+  * @brief TIM6 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM6_Init(void)
+{
+
+  /* USER CODE BEGIN TIM6_Init 0 */
+
+  /* USER CODE END TIM6_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM6_Init 1 */
+
+  /* USER CODE END TIM6_Init 1 */
+  htim6.Instance = TIM6;
+  htim6.Init.Prescaler = 7999;
+  htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim6.Init.Period = 9999;
+  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM6_Init 2 */
+
+  /* USER CODE END TIM6_Init 2 */
+
+}
+
+/**
   * @brief USART1 Initialization Function
   * @param None
   * @retval None
@@ -305,6 +349,7 @@ static void MX_DMA_Init(void)
 static void MX_GPIO_Init(void)
 {
   /* USER CODE BEGIN MX_GPIO_Init_1 */
+
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
@@ -312,10 +357,39 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
+
   /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
+
+/**
+  * @brief  Callback chiamata quando il timer TIM6 raggiunge il periodo (ogni 10 secondi)
+  * @param  htim: puntatore alla struttura del timer
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  if (htim->Instance == TIM6) {
+    // Avvia la conversione ADC con DMA
+    HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&value_adc, 1);
+  }
+}
+
+/**
+  * @brief  Callback chiamata quando la conversione ADC DMA è completata
+  * @param  hadc: puntatore alla struttura dell'ADC
+  * @retval None
+  */
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+  if (hadc->Instance == ADC1) {
+    // Ferma l'ADC DMA
+    HAL_ADC_Stop_DMA(&hadc1);
+    // Segnala che la conversione è completa
+    adc_conversion_complete = 1;
+  }
+}
 
 /* USER CODE END 4 */
 
