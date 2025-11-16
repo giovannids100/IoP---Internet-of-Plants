@@ -75,3 +75,18 @@ per testare se la configurazione è funzionante, aprire un nuovo terminale ed es
 ```bash
 curl -X POST "http://localhost:8000/api/dati"      -H "Content-Type: application/json"      -d '{"umidita": 55}'
 ```
+
+### Collegamenti Hardware
+
+**ADC**: DO del sensore -> ADC_IN stm (PA0)
+**USART**: USART_TX stm -> USART_RX esp32 e viceversa (PC4 -> G16; PC5 -> G17)
+**Alimentazione**: Tutti i dispositivi condividono GND e 5V
+
+### NETWORK
+
+sostituire nel file **example.env.h** i valori:
+**SSID**
+**PASSWORD**
+**API_ADDRESS:PORT/PATH/TO/API**
+
+Se il server API non è associato ad un dominio, bisogna che sia connesso alla stessa rete dell'esp32.
